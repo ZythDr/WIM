@@ -440,6 +440,11 @@ function WIM_ChatFrame_OnEvent(event)
 		if isGMSender then
 			WIM_PlayerCache[sender] = WIM_PlayerCache[sender] or {}
 			WIM_PlayerCache[sender].isGM = true
+			-- Remove from WHO queue if present
+			if WIM_PlayerCacheQueue[sender] then
+				WIM_DebugMsg("|cffff00ff[WIM GM]|r Removing GM from WHO queue: " .. sender)
+				WIM_PlayerCacheQueue[sender] = nil
+			end
 		end
 		
 		playerCheck(sender, function()
@@ -466,6 +471,11 @@ function WIM_ChatFrame_OnEvent(event)
 			WIM_PlayerCache[receiver] = WIM_PlayerCache[receiver] or {}
 			WIM_PlayerCache[receiver].isGM = true
 			WIM_DebugMsg("|cffff00ff[WIM GM]|r Set isGM=true for: " .. receiver)
+			-- Remove from WHO queue if present
+			if WIM_PlayerCacheQueue[receiver] then
+				WIM_DebugMsg("|cffff00ff[WIM GM]|r Removing GM from WHO queue: " .. receiver)
+				WIM_PlayerCacheQueue[receiver] = nil
+			end
 			-- Update window if it already exists
 			if WIM_Windows[receiver] then
 				WIM_DebugMsg("|cffff00ff[WIM GM]|r Updating existing window for GM: " .. receiver)
