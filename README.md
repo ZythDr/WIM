@@ -9,7 +9,7 @@
 
 ### Bug Fixes
 - **Ingame Links** – All chat links such as items, spells, quests, etc. now insert correctly without gaps.
-- **Macro Whispers** – Script- and macro-based whispers now send and display correctly in the WIM.
+- **Macro Whispers** – Script- and macro-based whispers now send and display correctly in WIM.
 - **Filter Iteration** – Fixed Lua 5.0 table iteration to now properly use `pairs()`, preventing undefined behavior.
 
 ### UI Improvements
