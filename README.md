@@ -18,8 +18,6 @@
 
 ## Previous Changes
 - Added 30s WHO cooldown (TurtleWoW limit)
-- Added GM detection with Blizzard icon and `<GM>` tag
-- GMs now skip WHO cooldown
 - Messages now display immediately (WHO loads async)
 - Removed "Block Low Level" option
 - Added debug mode: `/wimdebug`
