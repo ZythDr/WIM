@@ -4,7 +4,7 @@
 
 ### New Features
 - **New Filter Type: Exact** – Now filters only whispers matching exactly. "inv" only blocks message "inv", still allows message like "raid inv now"
-- **Unfocus WIM Window** – Pressing Escape now leaving window focus but keeps insert text intact. Optional under general with "escape close Window" dependency.
+- **Unfocus WIM Window** – Pressing Escape now leaving window focus but keeps insert text intact. Optional under general with "escape close window" dependency.
 - **Alt+Arrow Key Toggle** – Added option to text cursor moving. Alt modifier now can be disabled to work like in normal inputbox with arrow keys.
 
 ### Bug Fixes
