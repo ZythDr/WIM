@@ -16,10 +16,10 @@
 - Reorganized General options for improved clarity and better accessibility
 - Updated code formatting across all checkboxes for consistency
 
+Some more minor quality of life changes. 🐢
+
 ## Previous Changes
 - Added 30s WHO cooldown (TurtleWoW limit)
 - Messages now display immediately (WHO loads async)
 - Removed "Block Low Level" option
 - Added debug mode: `/wimdebug`
-
-Some more minor quality of life changes. 🐢
