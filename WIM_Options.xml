@@ -1943,7 +1943,7 @@
 											</OnLeave>
 										</Scripts>
 									</CheckButton>
-									<CheckButton name="$parentUseEscape">
+									<CheckButton name="$parentClickUnfocus">
 										<Size>
 											<AbsDimension x="25" y="25" />
 										</Size>
@@ -1951,6 +1951,62 @@
 											<Anchor point="TOPLEFT" relativeTo="$parentEscapeUnfocus" relativePoint="BOTTOMLEFT">
 												<Offset>
 													<AbsDimension x="25" y="-2" />
+												</Offset>
+											</Anchor>
+										</Anchors>
+										<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+										<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+										<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+										<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+										<Layers>
+											<Layer level="OVERLAY">
+												<FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="WIM_L_CLICKUNFOCUS">
+													<Anchors>
+														<Anchor point="LEFT">
+															<Offset>
+																<AbsDimension x="30" y="1" />
+															</Offset>
+														</Anchor>
+													</Anchors>
+													<FontHeight>
+														<AbsValue val="12" />
+													</FontHeight>
+													<Color r="1" g="0.8196079" b="0" />
+													<Shadow>
+														<Color r="0" g="0" b="0" />
+														<Offset>
+															<AbsDimension x="1" y="-1" />
+														</Offset>
+													</Shadow>
+												</FontString>
+											</Layer>
+										</Layers>
+										<Scripts>
+											<OnClick>
+												if (this:GetChecked()) then
+													PlaySound("igMainMenuOptionCheckBoxOff");
+												else
+													PlaySound("igMainMenuOptionCheckBoxOn");
+												end
+												WIM_Options_ClickUnfocusClicked();
+											</OnClick>
+											<OnEnter>
+												GameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT");
+												GameTooltip:SetText(WIM_L_CLICKUNFOCUSTOOLTIP, nil, nil, nil, nil, 1);
+											</OnEnter>
+											<OnLeave>
+												GameTooltip:Hide();
+											</OnLeave>
+										</Scripts>
+									</CheckButton>
+									<CheckButton name="$parentUseEscape">
+										<Size>
+											<AbsDimension x="25" y="25" />
+										</Size>
+										<Anchors>
+											<Anchor point="TOPLEFT" relativeTo="$parentClickUnfocus" relativePoint="BOTTOMLEFT">
+												<Offset>
+													<AbsDimension x="0" y="-2" />
 												</Offset>
 											</Anchor>
 										</Anchors>
@@ -2000,6 +2056,174 @@
 											</OnLeave>
 										</Scripts>
 									</CheckButton>
+									<CheckButton name="$parentClassColorMessages">
+										<Size>
+											<AbsDimension x="25" y="25" />
+										</Size>
+										<Anchors>
+											<Anchor point="TOPLEFT" relativeTo="$parentUseEscape" relativePoint="BOTTOMLEFT">
+												<Offset>
+													<AbsDimension x="0" y="-110" />
+												</Offset>
+											</Anchor>
+										</Anchors>
+										<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+										<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+										<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+										<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+										<Layers>
+											<Layer level="OVERLAY">
+												<FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="WIM_L_CLASSCOLORMESSAGES">
+													<Anchors>
+														<Anchor point="LEFT">
+															<Offset>
+																<AbsDimension x="30" y="1" />
+															</Offset>
+														</Anchor>
+													</Anchors>
+													<FontHeight>
+														<AbsValue val="12" />
+													</FontHeight>
+													<Color r="1" g="0.8196079" b="0" />
+													<Shadow>
+														<Color r="0" g="0" b="0" />
+														<Offset>
+															<AbsDimension x="1" y="-1" />
+														</Offset>
+													</Shadow>
+												</FontString>
+											</Layer>
+										</Layers>
+										<Scripts>
+											<OnClick>
+												if (this:GetChecked()) then
+													PlaySound("igMainMenuOptionCheckBoxOff");
+												else
+													PlaySound("igMainMenuOptionCheckBoxOn");
+												end
+												WIM_Options_ClassColorMessagesClicked();
+											</OnClick>
+											<OnEnter>
+												GameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT");
+												GameTooltip:SetText(WIM_L_CLASSCOLORMESSAGESTOOLTIP, nil, nil, nil, nil, 1);
+											</OnEnter>
+											<OnLeave>
+												GameTooltip:Hide();
+											</OnLeave>
+										</Scripts>
+									</CheckButton>
+									<CheckButton name="$parentWIMPlayerDBLookup">
+										<Size>
+											<AbsDimension x="25" y="25" />
+										</Size>
+										<Anchors>
+											<Anchor point="TOPLEFT" relativeTo="$parentClassColorMessages" relativePoint="BOTTOMLEFT">
+												<Offset>
+													<AbsDimension x="0" y="-2" />
+												</Offset>
+											</Anchor>
+										</Anchors>
+										<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+										<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+										<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+										<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+										<Layers>
+											<Layer level="OVERLAY">
+												<FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="WIM_L_WIMCACHE_LOOKUP">
+													<Anchors>
+														<Anchor point="LEFT">
+															<Offset>
+																<AbsDimension x="30" y="1" />
+															</Offset>
+														</Anchor>
+													</Anchors>
+													<FontHeight>
+														<AbsValue val="12" />
+													</FontHeight>
+													<Color r="1" g="0.8196079" b="0" />
+													<Shadow>
+														<Color r="0" g="0" b="0" />
+														<Offset>
+															<AbsDimension x="1" y="-1" />
+														</Offset>
+													</Shadow>
+												</FontString>
+											</Layer>
+										</Layers>
+										<Scripts>
+											<OnClick>
+												if (this:GetChecked()) then
+													PlaySound("igMainMenuOptionCheckBoxOff");
+												else
+													PlaySound("igMainMenuOptionCheckBoxOn");
+												end
+												WIM_Options_WIMPlayerDBLookupClicked();
+											</OnClick>
+											<OnEnter>
+												GameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT");
+												GameTooltip:SetText(WIM_L_WIMCACHE_LOOKUPTOOLTIP, nil, nil, nil, nil, 1);
+											</OnEnter>
+											<OnLeave>
+												GameTooltip:Hide();
+											</OnLeave>
+										</Scripts>
+									</CheckButton>
+									<CheckButton name="$parentPfUIPlayerDBLookup">
+										<Size>
+											<AbsDimension x="25" y="25" />
+										</Size>
+										<Anchors>
+											<Anchor point="TOPLEFT" relativeTo="$parentWIMPlayerDBLookup" relativePoint="BOTTOMLEFT">
+												<Offset>
+													<AbsDimension x="0" y="-2" />
+												</Offset>
+											</Anchor>
+										</Anchors>
+										<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+										<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+										<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+										<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+										<Layers>
+											<Layer level="OVERLAY">
+												<FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="WIM_L_PFUI_LOOKUP">
+													<Anchors>
+														<Anchor point="LEFT">
+															<Offset>
+																<AbsDimension x="30" y="1" />
+															</Offset>
+														</Anchor>
+													</Anchors>
+													<FontHeight>
+														<AbsValue val="12" />
+													</FontHeight>
+													<Color r="1" g="0.8196079" b="0" />
+													<Shadow>
+														<Color r="0" g="0" b="0" />
+														<Offset>
+															<AbsDimension x="1" y="-1" />
+														</Offset>
+													</Shadow>
+												</FontString>
+											</Layer>
+										</Layers>
+										<Scripts>
+											<OnClick>
+												if (this:GetChecked()) then
+													PlaySound("igMainMenuOptionCheckBoxOff");
+												else
+													PlaySound("igMainMenuOptionCheckBoxOn");
+												end
+												WIM_Options_PfUIPlayerDBLookupClicked();
+											</OnClick>
+											<OnEnter>
+												GameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT");
+												GameTooltip:SetText(WIM_L_PFUI_LOOKUPTOOLTIP, nil, nil, nil, nil, 1);
+											</OnEnter>
+											<OnLeave>
+												GameTooltip:Hide();
+											</OnLeave>
+										</Scripts>
+									</CheckButton>
 									<CheckButton name="$parentPlaySoundWisp">
 										<Size>
 											<AbsDimension x="25" y="25" />
@@ -2007,7 +2231,7 @@
 										<Anchors>
 											<Anchor point="TOPLEFT" relativeTo="$parentUseEscape" relativePoint="BOTTOMLEFT">
 												<Offset>
-													<AbsDimension x="-25" y="-2" />
+													<AbsDimension x="0" y="-2" />
 												</Offset>
 											</Anchor>
 										</Anchors>
@@ -2387,6 +2611,7 @@
 									<OnValueChanged>
 										WIM_Data.winSize.width = this:GetValue();
 										getglobal(this:GetName().."EditBox"):SetText(this:GetValue());
+										WIM_ClearSessionSize();
 										WIM_SetAllWindowProps();
 									</OnValueChanged>
 								</Scripts>
@@ -2406,10 +2631,116 @@
 									<OnValueChanged>
 										WIM_Data.winSize.height = this:GetValue();
 										getglobal(this:GetName().."EditBox"):SetText(this:GetValue());
+										WIM_ClearSessionSize();
 										WIM_SetAllWindowProps();
 									</OnValueChanged>
 								</Scripts>
 							</Slider>
+							<CheckButton name="$parentMergeWindows">
+								<Size>
+									<AbsDimension x="25" y="25" />
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parentWindowHeight" relativePoint="BOTTOMLEFT">
+										<Offset>
+											<AbsDimension x="0" y="-20" />
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+								<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+								<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+								<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+								<Layers>
+									<Layer level="OVERLAY">
+										<FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="WIM_L_MERGEWINDOWS">
+											<Anchors>
+												<Anchor point="LEFT">
+													<Offset>
+														<AbsDimension x="30" y="1" />
+													</Offset>
+												</Anchor>
+											</Anchors>
+											<FontHeight>
+												<AbsValue val="12" />
+											</FontHeight>
+											<Color r="1" g="0.8196079" b="0" />
+											<Shadow>
+												<Color r="0" g="0" b="0" />
+												<Offset>
+													<AbsDimension x="1" y="-1" />
+												</Offset>
+											</Shadow>
+										</FontString>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnClick>
+										if (this:GetChecked()) then
+											PlaySound("igMainMenuOptionCheckBoxOff");
+										else
+											PlaySound("igMainMenuOptionCheckBoxOn");
+										end
+										WIM_Options_MergeWindowsClicked();
+									</OnClick>
+								</Scripts>
+							</CheckButton>
+							<CheckButton name="$parentTabBarBelow">
+								<Size>
+									<AbsDimension x="25" y="25" />
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parentMergeWindows" relativePoint="BOTTOMLEFT">
+										<Offset>
+											<AbsDimension x="25" y="-2" />
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+								<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+								<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+								<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+								<Layers>
+									<Layer level="OVERLAY">
+										<FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="WIM_L_TABBARBELOW">
+											<Anchors>
+												<Anchor point="LEFT">
+													<Offset>
+														<AbsDimension x="30" y="1" />
+													</Offset>
+												</Anchor>
+											</Anchors>
+											<FontHeight>
+												<AbsValue val="12" />
+											</FontHeight>
+											<Color r="1" g="0.8196079" b="0" />
+											<Shadow>
+												<Color r="0" g="0" b="0" />
+												<Offset>
+													<AbsDimension x="1" y="-1" />
+												</Offset>
+											</Shadow>
+										</FontString>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnClick>
+										if (this:GetChecked()) then
+											PlaySound("igMainMenuOptionCheckBoxOff");
+										else
+											PlaySound("igMainMenuOptionCheckBoxOn");
+										end
+										WIM_Options_TabBarBelowClicked();
+									</OnClick>
+									<OnEnter>
+										GameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT");
+										GameTooltip:SetText(WIM_L_TABBARBELOWTOOLTIP, nil, nil, nil, nil, 1);
+									</OnEnter>
+									<OnLeave>
+										GameTooltip:Hide();
+									</OnLeave>
+								</Scripts>
+							</CheckButton>
 							<!-- End Window Options -->
 						</Frames>
 					</Frame>
