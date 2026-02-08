@@ -1,4 +1,4 @@
-# WIMP v1.0 - TurtleWoW
+# WIM v1.5.0 - TurtleWoW
 ## Patch Notes
 
 ### Merged Windows/Tabbed Layout & QoL
