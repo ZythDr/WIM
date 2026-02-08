@@ -418,10 +418,16 @@
 					<OnEditFocusGained>
 						WIM_EditBoxInFocus = this;
 						WIM_UnfocusBlocker_Show();
+						if(WIM_pfUI_OnEditFocusChanged) then
+							WIM_pfUI_OnEditFocusChanged(this, true);
+						end
 					</OnEditFocusGained>
 					<OnEditFocusLost>
 						WIM_EditBoxInFocus = nil;
 						WIM_UnfocusBlocker_Hide();
+						if(WIM_pfUI_OnEditFocusChanged) then
+							WIM_pfUI_OnEditFocusChanged(this, false);
+						end
 					</OnEditFocusLost>
 				</Scripts>
 			</EditBox>

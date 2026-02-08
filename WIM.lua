@@ -183,11 +183,12 @@ WIM_Data_DEFAULTS = {
 	blockLowLevel = false,
 	requireAltForArrows = false,
 	mergeWindows = true,
-	clickOutsideUnfocus = false,
+	clickOutsideUnfocus = true,
 	tabBarBelow = false,
 	classColorMessages = true,
 	wimPlayerDBLookup = true,
 	pfuiPlayerDBLookup = true,
+	pfuiFocusWindowClassBorder = true,
 };
 --[initialize defualt values
 WIM_Data = WIM_Data_DEFAULTS;
@@ -799,6 +800,7 @@ function WIM_Incoming(event)
 		if(WIM_Data.classColorMessages == nil) then WIM_Data.classColorMessages = WIM_Data_DEFAULTS.classColorMessages; end;
 		if(WIM_Data.wimPlayerDBLookup == nil) then WIM_Data.wimPlayerDBLookup = WIM_Data_DEFAULTS.wimPlayerDBLookup; end;
 		if(WIM_Data.pfuiPlayerDBLookup == nil) then WIM_Data.pfuiPlayerDBLookup = WIM_Data_DEFAULTS.pfuiPlayerDBLookup; end;
+		if(WIM_Data.pfuiFocusWindowClassBorder == nil) then WIM_Data.pfuiFocusWindowClassBorder = WIM_Data_DEFAULTS.pfuiFocusWindowClassBorder; end;
 
 		if(WIM_PlayerCacheDB == nil) then WIM_PlayerCacheDB = {}; end;
 		if WIM_Data.wimPlayerDBLookup ~= false then

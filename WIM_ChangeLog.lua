@@ -1,5 +1,5 @@
 WIM_CHANGE_LOG = [[
-|rVersion 1.0 (WIMP Fork) (02-08-2026)|cffffffff
+|rVersion 1.5.0 (02-08-2026)|cffffffff
 [+] - Added merged tabbed window mode with a shared conversation frame.
 [+] - Added a horizontal scrollable tab bar with unread flashing animation.
 [+] - Added option to place tab bar above or below the message window.
