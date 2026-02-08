@@ -19,6 +19,7 @@
   - Only activates when pfUI is loaded and pfUI `WIM Integration` is enabled
   - The new Tab Bar skins itself to match pfUI when pfUI is present and `WIM Integration` is enabled in pfUI
   - Use pfUI's DB for faster Class/Guild/Race/Level lookup (until `/who` query is successful)
+  - Optional class-colored "Focus-border" to better show when WIM is focused or when it isn't
 
 - **Bug Fixes**
   - AtlasLoot Links no longer instantly send when shift-clicked
