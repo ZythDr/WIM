@@ -65,10 +65,15 @@ function WIM_Options_OnShow()
 		WIM_OptionsTabbedFrameGeneralShowAFK:SetChecked(WIM_Data.showAFK);
 		WIM_OptionsTabbedFrameGeneralUseEscape:SetChecked(WIM_Data.useEscape);
 		WIM_OptionsTabbedFrameGeneralEscapeUnfocus:SetChecked(WIM_Data.escapeUnfocus);
+		WIM_OptionsTabbedFrameGeneralClickUnfocus:SetChecked(WIM_Data.clickOutsideUnfocus);
+		WIM_OptionsTabbedFrameGeneralClassColorMessages:SetChecked(WIM_Data.classColorMessages);
+		WIM_OptionsTabbedFrameGeneralWIMPlayerDBLookup:SetChecked(WIM_Data.wimPlayerDBLookup);
+		WIM_OptionsTabbedFrameGeneralPfUIPlayerDBLookup:SetChecked(WIM_Data.pfuiPlayerDBLookup);
 		WIM_Options_EscapeUnfocusClicked();
 		WIM_OptionsTabbedFrameGeneralInterceptSlashWisp:SetChecked(WIM_Data.hookWispParse);
 		WIM_OptionsTabbedFrameGeneralBlockLowLevel:SetChecked(WIM_Data.blockLowLevel);
 		WIM_OptionsTabbedFrameGeneralRequireAltArrows:SetChecked(WIM_Data.requireAltForArrows);
+		WIM_Options_UpdatePfUIPlayerDBLookupState();
 		
 	--[ Window Settings
 		WIM_OptionsTabbedFrameWindowWindowWidthTitle:SetText(WIM_L_WINDOWWIDTH);
@@ -76,6 +81,9 @@ function WIM_Options_OnShow()
 		WIM_OptionsTabbedFrameWindowWindowHeightTitle:SetText(WIM_L_WINDOWHEIGHT);
 		WIM_OptionsTabbedFrameWindowWindowHeight:SetValue(WIM_Data.winSize.height);
 		WIM_OptionsTabbedFrameWindowWindowCascade:SetChecked(WIM_Data.winCascade.enabled);
+		WIM_OptionsTabbedFrameWindowMergeWindows:SetChecked(WIM_Data.mergeWindows);
+		WIM_OptionsTabbedFrameWindowTabBarBelow:SetChecked(WIM_Data.tabBarBelow);
+		WIM_Options_UpdateTabBarBelowState();
 		
 	--[ Filter Settings
 		WIM_OptionsTabbedFrameFilterAliasEnabled:SetChecked(WIM_Data.enableAlias);
@@ -193,6 +201,7 @@ function WIM_Options_General_Click()
 	WIM_OptionsTabbedFrameFilter:Hide();
 	WIM_OptionsTabbedFrameHistory:Hide();
 	WIM_Options_GeneralScroll:Show();
+	WIM_Options_UpdatePfUIPlayerDBLookupState();
 end
 
 function WIM_Options_Windows_Click()
@@ -338,19 +347,93 @@ end
 function WIM_Options_EscapeUnfocusClicked()
 	if(WIM_OptionsTabbedFrameGeneralEscapeUnfocus:GetChecked()) then
 		WIM_Data.escapeUnfocus = true;
-		WIM_OptionsTabbedFrameGeneralUseEscape:Disable();
-		WIM_Data.useEscape = false;
-		WIM_SetAllWindowProps();
 	else
 		WIM_Data.escapeUnfocus = false;
-		WIM_OptionsTabbedFrameGeneralUseEscape:Enable();
-		if(WIM_OptionsTabbedFrameGeneralUseEscape:GetChecked()) then
-			WIM_Data.useEscape = true;
-		else
-			WIM_Data.useEscape = false;
-		end
-		WIM_SetAllWindowProps();
 	end
+	WIM_OptionsTabbedFrameGeneralUseEscape:Enable();
+	WIM_SetAllWindowProps();
+end
+
+function WIM_Options_ClickUnfocusClicked()
+	if(WIM_OptionsTabbedFrameGeneralClickUnfocus:GetChecked()) then
+		WIM_Data.clickOutsideUnfocus = true;
+		if WIM_EditBoxInFocus then
+			WIM_UnfocusBlocker_Show();
+		end
+	else
+		WIM_Data.clickOutsideUnfocus = false;
+		WIM_UnfocusBlocker_Hide();
+	end
+end
+
+function WIM_Options_ClassColorMessagesClicked()
+	if(WIM_OptionsTabbedFrameGeneralClassColorMessages:GetChecked()) then
+		WIM_Data.classColorMessages = true;
+	else
+		WIM_Data.classColorMessages = false;
+	end
+end
+
+local function WIM_Options_PruneCacheSources()
+	if not WIM_PlayerCache then
+		return
+	end
+
+	local keepWIM = WIM_Data and WIM_Data.wimPlayerDBLookup ~= false
+	local keepPfUI = WIM_Data and WIM_Data.pfuiPlayerDBLookup ~= false
+	for name, info in WIM_PlayerCache do
+		if info and info.cached then
+			if info.source == "wimdb" and not keepWIM then
+				WIM_PlayerCache[name] = nil
+			elseif info.source == "pfui" and not keepPfUI then
+				WIM_PlayerCache[name] = nil
+			elseif not info.source and not keepWIM and not keepPfUI then
+				-- Legacy cached entries without a source tag should not survive with both fallbacks disabled.
+				WIM_PlayerCache[name] = nil
+			end
+		end
+	end
+end
+
+local function WIM_Options_RefreshWhoInfoViews()
+	if WIM_IsMergeEnabled() and WIM_TabBar_ActiveUser then
+		if WIM_EnsurePlayerCacheFallback then
+			WIM_EnsurePlayerCacheFallback(WIM_TabBar_ActiveUser)
+		end
+		WIM_SetWhoInfo(WIM_TabBar_ActiveUser)
+	elseif WIM_Windows then
+		for user, info in WIM_Windows do
+			if info and info.is_visible then
+				if WIM_EnsurePlayerCacheFallback then
+					WIM_EnsurePlayerCacheFallback(user)
+				end
+				WIM_SetWhoInfo(user)
+			end
+		end
+	end
+	if WIM_TabBar_Update then
+		WIM_TabBar_Update(false)
+	end
+end
+
+function WIM_Options_WIMPlayerDBLookupClicked()
+	if(WIM_OptionsTabbedFrameGeneralWIMPlayerDBLookup:GetChecked()) then
+		WIM_Data.wimPlayerDBLookup = true;
+	else
+		WIM_Data.wimPlayerDBLookup = false;
+	end
+	WIM_Options_PruneCacheSources()
+	WIM_Options_RefreshWhoInfoViews()
+end
+
+function WIM_Options_PfUIPlayerDBLookupClicked()
+	if(WIM_OptionsTabbedFrameGeneralPfUIPlayerDBLookup:GetChecked()) then
+		WIM_Data.pfuiPlayerDBLookup = true;
+	else
+		WIM_Data.pfuiPlayerDBLookup = false;
+	end
+	WIM_Options_PruneCacheSources()
+	WIM_Options_RefreshWhoInfoViews()
 end
 
 function WIM_Options_InterceptSlashWispClicked()
@@ -895,6 +978,58 @@ function WIM_Options_WindowCascadeClicked()
 		WIM_Data.winCascade.enabled = true;
 	else
 		WIM_Data.winCascade.enabled = false;
+	end
+end
+
+function WIM_Options_MergeWindowsClicked()
+	if(WIM_OptionsTabbedFrameWindowMergeWindows:GetChecked()) then
+		WIM_SwitchMergeMode(true);
+	else
+		WIM_SwitchMergeMode(false);
+	end
+	WIM_Options_UpdateTabBarBelowState();
+end
+
+function WIM_Options_TabBarBelowClicked()
+	if(WIM_OptionsTabbedFrameWindowTabBarBelow:GetChecked()) then
+		WIM_Data.tabBarBelow = true;
+	else
+		WIM_Data.tabBarBelow = false;
+	end
+	if WIM_IsMergeEnabled() then
+		local f = getglobal(WIM_SharedFrameName)
+		if f then
+			WIM_TabBar_AttachToWindow(f)
+			WIM_TabBar_Update(true)
+		end
+	end
+end
+
+function WIM_Options_UpdateTabBarBelowState()
+	if WIM_OptionsTabbedFrameWindowTabBarBelow then
+		if WIM_Data.mergeWindows then
+			WIM_OptionsTabbedFrameWindowTabBarBelow:Enable();
+		else
+			WIM_OptionsTabbedFrameWindowTabBarBelow:Disable();
+		end
+	end
+	WIM_Options_UpdatePfUIPlayerDBLookupState()
+end
+
+function WIM_Options_UpdatePfUIPlayerDBLookupState()
+	if not WIM_OptionsTabbedFrameGeneralPfUIPlayerDBLookup then
+		return
+	end
+
+	local enabled = false
+	if WIM_pfUI_CanUsePlayerDBLookup then
+		enabled = WIM_pfUI_CanUsePlayerDBLookup()
+	end
+
+	if enabled then
+		WIM_OptionsTabbedFrameGeneralPfUIPlayerDBLookup:Enable();
+	else
+		WIM_OptionsTabbedFrameGeneralPfUIPlayerDBLookup:Disable();
 	end
 end
 
