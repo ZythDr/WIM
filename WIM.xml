@@ -10,6 +10,8 @@
 	<Script file="WIM_ChangeLog.lua"/>
 	<Script file="WIM.lua"/> 
 	<Script file="WIM_Hooks.lua"/> 
+	<Script file="WIM_Tabs.lua"/>
+	<Script file="WIM_pfUI.lua"/>
 
 
 
@@ -364,7 +366,7 @@
 					</Anchor>
 					<Anchor point="BOTTOMRIGHT">
 						<Offset>
-							<AbsDimension x="-10" y="0" />
+							<AbsDimension x="-20" y="0" />
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -415,9 +417,11 @@
 					</OnTabPressed>
 					<OnEditFocusGained>
 						WIM_EditBoxInFocus = this;
+						WIM_UnfocusBlocker_Show();
 					</OnEditFocusGained>
 					<OnEditFocusLost>
 						WIM_EditBoxInFocus = nil;
+						WIM_UnfocusBlocker_Hide();
 					</OnEditFocusLost>
 				</Scripts>
 			</EditBox>
