@@ -83,7 +83,9 @@ function WIM_Options_OnShow()
 		WIM_OptionsTabbedFrameWindowWindowCascade:SetChecked(WIM_Data.winCascade.enabled);
 		WIM_OptionsTabbedFrameWindowMergeWindows:SetChecked(WIM_Data.mergeWindows);
 		WIM_OptionsTabbedFrameWindowTabBarBelow:SetChecked(WIM_Data.tabBarBelow);
+		WIM_OptionsTabbedFrameWindowPfUIFocusWindowClassBorder:SetChecked(WIM_Data.pfuiFocusWindowClassBorder);
 		WIM_Options_UpdateTabBarBelowState();
+		WIM_Options_UpdatePfUIFocusBorderState();
 		
 	--[ Filter Settings
 		WIM_OptionsTabbedFrameFilterAliasEnabled:SetChecked(WIM_Data.enableAlias);
@@ -214,6 +216,7 @@ function WIM_Options_Windows_Click()
 	WIM_OptionsTabbedFrameHistory:Hide();
 	WIM_OptionsTabbedFrameWindow:Show();
 	WIM_Options_GeneralScroll:Hide();
+	WIM_Options_UpdatePfUIFocusBorderState();
 end
 
 function WIM_Options_Filter_Click()
@@ -1005,6 +1008,13 @@ function WIM_Options_TabBarBelowClicked()
 	end
 end
 
+function WIM_Options_PfUIFocusWindowClassBorderClicked()
+	WIM_Data.pfuiFocusWindowClassBorder = WIM_OptionsTabbedFrameWindowPfUIFocusWindowClassBorder:GetChecked() and true or false;
+	if WIM_pfUI_UpdateFocusBorders then
+		WIM_pfUI_UpdateFocusBorders();
+	end
+end
+
 function WIM_Options_UpdateTabBarBelowState()
 	if WIM_OptionsTabbedFrameWindowTabBarBelow then
 		if WIM_Data.mergeWindows then
@@ -1014,6 +1024,7 @@ function WIM_Options_UpdateTabBarBelowState()
 		end
 	end
 	WIM_Options_UpdatePfUIPlayerDBLookupState()
+	WIM_Options_UpdatePfUIFocusBorderState()
 end
 
 function WIM_Options_UpdatePfUIPlayerDBLookupState()
@@ -1030,6 +1041,20 @@ function WIM_Options_UpdatePfUIPlayerDBLookupState()
 		WIM_OptionsTabbedFrameGeneralPfUIPlayerDBLookup:Enable();
 	else
 		WIM_OptionsTabbedFrameGeneralPfUIPlayerDBLookup:Disable();
+	end
+end
+
+function WIM_Options_UpdatePfUIFocusBorderState()
+	if not WIM_OptionsTabbedFrameWindowPfUIFocusWindowClassBorder then
+		return
+	end
+
+	local enabled = WIM_pfUI_IsIntegrationEnabled and WIM_pfUI_IsIntegrationEnabled() or false
+
+	if enabled then
+		WIM_OptionsTabbedFrameWindowPfUIFocusWindowClassBorder:Enable();
+	else
+		WIM_OptionsTabbedFrameWindowPfUIFocusWindowClassBorder:Disable();
 	end
 end
 
