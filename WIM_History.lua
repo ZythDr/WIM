@@ -110,7 +110,9 @@ function WIM_HistoryView_ShowMessages()
 					end
 				end
 				tStamp = "|cff"..WIM_RGBtoHex(WIM_Data.displayColors.sysMsg.r, WIM_Data.displayColors.sysMsg.g, WIM_Data.displayColors.sysMsg.b)..WIM_History[WIM_HistoryView_Name_Selected][i].time.."|r ";
-				tFrom = "[|Hplayer:"..WIM_History[WIM_HistoryView_Name_Selected][i].from.."|h"..WIM_GetAlias(WIM_History[WIM_HistoryView_Name_Selected][i].from, true).."|h]: ";
+				local fromName = WIM_History[WIM_HistoryView_Name_Selected][i].from
+				local isGM = WIM_History[WIM_HistoryView_Name_Selected][i].isGM
+				tFrom = WIM_FormatPlayerLink(fromName, WIM_GetAlias(fromName, true), isGM, true, true)..": ";
 				tMsg = tStamp..tFrom..WIM_History[WIM_HistoryView_Name_Selected][i].msg;
 				if(WIM_History[WIM_HistoryView_Name_Selected][i].type == 1) then
 					WIM_HistoryFrameMessageListScrollingMessageFrame:AddMessage(tMsg, WIM_Data.displayColors.wispIn.r, WIM_Data.displayColors.wispIn.g, WIM_Data.displayColors.wispIn.b);
