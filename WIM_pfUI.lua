@@ -230,16 +230,18 @@ local function WIM_pfUI_ApplyFontFace(theWin)
     return
   end
 
+  local desiredSize = tonumber(WIM_Data and WIM_Data.fontSize) or 12
+
   local msgFrame = _G[name .. "ScrollingMessageFrame"]
   if msgFrame and msgFrame.GetFont and msgFrame.SetFont then
-    local _, size, flags = msgFrame:GetFont()
-    msgFrame:SetFont(pfUI.font_default, size or WIM_Data.fontSize, flags)
+    local _, _, flags = msgFrame:GetFont()
+    msgFrame:SetFont(pfUI.font_default, desiredSize, flags)
   end
 
   local msgBox = _G[name .. "MsgBox"]
   if msgBox and msgBox.GetFont and msgBox.SetFont then
-    local _, size, flags = msgBox:GetFont()
-    msgBox:SetFont(pfUI.font_default, size or 14, flags)
+    local _, _, flags = msgBox:GetFont()
+    msgBox:SetFont(pfUI.font_default, desiredSize, flags)
   end
 end
 
@@ -590,6 +592,12 @@ local function WIM_pfUI_Init()
       WIM_pfUI_ApplyFontFace(theWin)
     end
     WIM_pfUI_UpdateFocusBordersIfEnabled()
+  end)
+
+  hooksecurefunc("WIM_WindowOnShow", function()
+    if WIM_pfUI_IsEnabled() and this then
+      WIM_pfUI_ApplyFontFace(this)
+    end
   end)
 
   hooksecurefunc("WIM_SelectUser", WIM_pfUI_UpdateFocusBordersIfEnabled)
