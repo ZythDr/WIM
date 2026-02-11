@@ -2,6 +2,7 @@ WIM_pfUI = {
   initialized = false,
   defaultInset = nil,
   focusWindowTarget = nil,
+  fontApplyFrame = nil,
 }
 
 local function WIM_pfUI_IsEnabled()
@@ -243,6 +244,41 @@ local function WIM_pfUI_ApplyFontFace(theWin)
     local _, _, flags = msgBox:GetFont()
     msgBox:SetFont(pfUI.font_default, desiredSize, flags)
   end
+end
+
+local function WIM_pfUI_QueueFontApply(theWin)
+  if not (theWin and WIM_pfUI_IsEnabled()) then
+    return
+  end
+
+  if not WIM_pfUI.fontApplyFrame then
+    local frame = CreateFrame("Frame")
+    frame.pending = {}
+    frame:SetScript("OnUpdate", function()
+      local hasWork = false
+      for win, ticks in this.pending do
+        if win and win.IsVisible and win:IsVisible() then
+          hasWork = true
+          WIM_pfUI_ApplyFontFace(win)
+          if ticks <= 0 then
+            this.pending[win] = nil
+          else
+            this.pending[win] = ticks - 1
+          end
+        else
+          this.pending[win] = nil
+        end
+      end
+      if not hasWork then
+        this:Hide()
+      end
+    end)
+    WIM_pfUI.fontApplyFrame = frame
+  end
+
+  -- Re-apply for a couple of frames to beat late pfUI font-size writes.
+  WIM_pfUI.fontApplyFrame.pending[theWin] = 2
+  WIM_pfUI.fontApplyFrame:Show()
 end
 
 local function WIM_pfUI_ApplyTabBarTheme()
@@ -608,6 +644,7 @@ local function WIM_pfUI_Init()
   hooksecurefunc("WIM_SetWindowProps", function(theWin)
     if WIM_pfUI_IsEnabled() then
       WIM_pfUI_ApplyFontFace(theWin)
+      WIM_pfUI_QueueFontApply(theWin)
     end
     WIM_pfUI_UpdateFocusBordersIfEnabled()
   end)
@@ -615,6 +652,7 @@ local function WIM_pfUI_Init()
   hooksecurefunc("WIM_WindowOnShow", function()
     if WIM_pfUI_IsEnabled() and this then
       WIM_pfUI_ApplyFontFace(this)
+      WIM_pfUI_QueueFontApply(this)
     end
   end)
 
