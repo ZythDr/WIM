@@ -233,16 +233,47 @@ local function WIM_pfUI_ApplyFontFace(theWin)
 
   local desiredSize = tonumber(WIM_Data and WIM_Data.fontSize) or 12
 
+  local function EnsureFontGuard(widget)
+    if not (widget and widget.SetFont and widget.GetFont) then
+      return
+    end
+    if widget._wimFontGuarded then
+      return
+    end
+    widget._wimFontGuarded = true
+    hooksecurefunc(widget, "SetFont", function(self, font, size, flags)
+      if self._wimApplyingFont then
+        return
+      end
+      if not WIM_pfUI_IsEnabled() then
+        return
+      end
+      local enforcedSize = tonumber(WIM_Data and WIM_Data.fontSize) or 12
+      if font ~= pfUI.font_default or size ~= enforcedSize then
+        self._wimApplyingFont = true
+        local _, _, currentFlags = self:GetFont()
+        self:SetFont(pfUI.font_default, enforcedSize, currentFlags or flags)
+        self._wimApplyingFont = nil
+      end
+    end)
+  end
+
   local msgFrame = _G[name .. "ScrollingMessageFrame"]
   if msgFrame and msgFrame.GetFont and msgFrame.SetFont then
+    EnsureFontGuard(msgFrame)
+    msgFrame._wimApplyingFont = true
     local _, _, flags = msgFrame:GetFont()
     msgFrame:SetFont(pfUI.font_default, desiredSize, flags)
+    msgFrame._wimApplyingFont = nil
   end
 
   local msgBox = _G[name .. "MsgBox"]
   if msgBox and msgBox.GetFont and msgBox.SetFont then
+    EnsureFontGuard(msgBox)
+    msgBox._wimApplyingFont = true
     local _, _, flags = msgBox:GetFont()
     msgBox:SetFont(pfUI.font_default, desiredSize, flags)
+    msgBox._wimApplyingFont = nil
   end
 end
 
@@ -276,8 +307,8 @@ local function WIM_pfUI_QueueFontApply(theWin)
     WIM_pfUI.fontApplyFrame = frame
   end
 
-  -- Re-apply for a couple of frames to beat late pfUI font-size writes.
-  WIM_pfUI.fontApplyFrame.pending[theWin] = 2
+  -- Re-apply for a few frames to beat late pfUI font-size writes.
+  WIM_pfUI.fontApplyFrame.pending[theWin] = 5
   WIM_pfUI.fontApplyFrame:Show()
 end
 
@@ -656,7 +687,22 @@ local function WIM_pfUI_Init()
     end
   end)
 
-  hooksecurefunc("WIM_SelectUser", WIM_pfUI_UpdateFocusBordersIfEnabled)
+  hooksecurefunc("WIM_SelectUser", function(theUser)
+    if WIM_pfUI_IsEnabled() then
+      local targetWin = nil
+      if WIM_IsMergeEnabled and WIM_IsMergeEnabled() and WIM_GetSharedFrame then
+        targetWin = WIM_GetSharedFrame()
+      elseif theUser and WIM_Windows and WIM_Windows[theUser] then
+        local frameName = WIM_Windows[theUser].frame
+        targetWin = frameName and _G[frameName]
+      end
+      if targetWin then
+        WIM_pfUI_ApplyFontFace(targetWin)
+        WIM_pfUI_QueueFontApply(targetWin)
+      end
+    end
+    WIM_pfUI_UpdateFocusBordersIfEnabled()
+  end)
   hooksecurefunc("WIM_SetWhoInfo", WIM_pfUI_UpdateFocusBordersIfEnabled)
 
   if WIM_TabBar_Ensure then
