@@ -312,6 +312,28 @@ local function WIM_pfUI_ApplyTabElementSkin()
     btn:SetDisabledTexture(nil)
   end
 
+  local tabTexNames = {
+    "Left", "Middle", "Right",
+    "LeftHighlight", "MiddleHighlight", "RightHighlight",
+    "LeftDisabled", "MiddleDisabled", "RightDisabled",
+    "LeftDown", "MiddleDown", "RightDown",
+  }
+
+  local function StripTabTemplateArt(btn)
+    if not btn then
+      return
+    end
+    local name = btn:GetName()
+    for i = 1, table.getn(tabTexNames) do
+      local tex = name and _G[name .. tabTexNames[i]]
+      if tex then
+        tex:SetAlpha(0)
+      end
+    end
+    local hl = btn:GetHighlightTexture()
+    if hl then hl:SetAlpha(0) end
+  end
+
   local function SkinTabButton(btn)
     if not btn then
       return
@@ -321,23 +343,11 @@ local function WIM_pfUI_ApplyTabElementSkin()
       btn._wimTooltipBackdrop:Hide()
     end
 
-    if not btn._wimPfUISkinned then
-      local name = btn:GetName()
-      local texNames = {
-        "Left", "Middle", "Right",
-        "LeftHighlight", "MiddleHighlight", "RightHighlight",
-        "LeftDisabled", "MiddleDisabled", "RightDisabled",
-        "LeftDown", "MiddleDown", "RightDown",
-      }
+    -- Blizzard tab textures can be re-shown by template state changes.
+    -- Re-zero them every pass to keep pfUI skin consistently applied.
+    StripTabTemplateArt(btn)
 
-      for i = 1, table.getn(texNames) do
-        local tex = name and _G[name .. texNames[i]]
-        if tex then tex:SetAlpha(0) end
-      end
-
-      local hl = btn:GetHighlightTexture()
-      if hl then hl:SetAlpha(0) end
-
+    if (not btn._wimPfUISkinned) or (not btn.backdrop) then
       pfUI.api.CreateBackdrop(btn, nil, nil, tonumber(pfUI_config.chat and pfUI_config.chat.global and pfUI_config.chat.global.alpha) or .8)
       btn._wimPfUISkinned = true
     end
@@ -484,6 +494,14 @@ local function WIM_pfUI_ApplyTabElementSkin()
   end
 end
 
+function WIM_pfUI_RefreshTabSkin()
+  if not WIM_pfUI_IsEnabled() then
+    return
+  end
+  WIM_pfUI_ApplyTabBarTheme()
+  WIM_pfUI_ApplyTabElementSkin()
+end
+
 local function WIM_pfUI_ApplyBarOffset()
   if not WIM_TabBar then
     return
@@ -613,10 +631,7 @@ local function WIM_pfUI_Init()
 
   if WIM_TabBar_Update then
     hooksecurefunc("WIM_TabBar_Update", function()
-      if WIM_pfUI_IsEnabled() then
-        WIM_pfUI_ApplyTabBarTheme()
-        WIM_pfUI_ApplyTabElementSkin()
-      end
+      WIM_pfUI_RefreshTabSkin()
     end)
   end
 
