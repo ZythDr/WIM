@@ -17,4 +17,7 @@
 	<Binding name="WIMHIDEALL" header="WIMMOD">
 			WIM_HideAll();
 	</Binding>
+	<Binding name="WIMLASTTAB" header="WIMMOD">
+			WIM_Bindings_ShowLastTab();
+	</Binding>
 </Bindings>

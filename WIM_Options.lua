@@ -59,7 +59,6 @@ function WIM_Options_OnShow()
 		WIM_OptionsTabbedFrameGeneralPopUpdate:SetChecked(WIM_Data.popUpdate);
 		WIM_Options_PopNewClicked();
 		WIM_OptionsTabbedFrameGeneralPlaySoundWisp:SetChecked(WIM_Data.playSoundWisp);
-		WIM_OptionsTabbedFrameGeneralSortOrderAlpha:SetChecked(WIM_Data.sortAlpha);
 		WIM_OptionsTabbedFrameGeneralPopCombat:SetChecked(WIM_Data.popCombat);
 		WIM_OptionsTabbedFrameGeneralPopOnSend:SetChecked(WIM_Data.popOnSend);
 		WIM_OptionsTabbedFrameGeneralShowAFK:SetChecked(WIM_Data.showAFK);
@@ -71,7 +70,7 @@ function WIM_Options_OnShow()
 		WIM_OptionsTabbedFrameGeneralPfUIPlayerDBLookup:SetChecked(WIM_Data.pfuiPlayerDBLookup);
 		WIM_Options_EscapeUnfocusClicked();
 		WIM_OptionsTabbedFrameGeneralInterceptSlashWisp:SetChecked(WIM_Data.hookWispParse);
-		WIM_OptionsTabbedFrameGeneralBlockLowLevel:SetChecked(WIM_Data.blockLowLevel);
+		WIM_OptionsTabbedFrameGeneralReplyHotkeyFix:SetChecked(WIM_Data.replyHotkeyFix ~= false);
 		WIM_OptionsTabbedFrameGeneralRequireAltArrows:SetChecked(WIM_Data.requireAltForArrows);
 		WIM_Options_UpdatePfUIPlayerDBLookupState();
 		
@@ -81,6 +80,7 @@ function WIM_Options_OnShow()
 		WIM_OptionsTabbedFrameWindowWindowHeightTitle:SetText(WIM_L_WINDOWHEIGHT);
 		WIM_OptionsTabbedFrameWindowWindowHeight:SetValue(WIM_Data.winSize.height);
 		WIM_OptionsTabbedFrameWindowWindowCascade:SetChecked(WIM_Data.winCascade.enabled);
+		WIM_OptionsTabbedFrameWindowSortOrderAlpha:SetChecked(WIM_Data.sortAlpha);
 		WIM_OptionsTabbedFrameWindowMergeWindows:SetChecked(WIM_Data.mergeWindows);
 		WIM_OptionsTabbedFrameWindowTabBarBelow:SetChecked(WIM_Data.tabBarBelow);
 		WIM_OptionsTabbedFrameWindowPfUIFocusWindowClassBorder:SetChecked(WIM_Data.pfuiFocusWindowClassBorder);
@@ -322,7 +322,8 @@ function WIM_Options_ShowToolTipsClicked()
 end
 
 function WIM_Options_SortOrderAlphaClicked()
-	if(WIM_OptionsTabbedFrameGeneralSortOrderAlpha:GetChecked()) then
+	local cb = WIM_OptionsTabbedFrameWindowSortOrderAlpha or WIM_OptionsTabbedFrameGeneralSortOrderAlpha
+	if(cb and cb:GetChecked()) then
 		WIM_Data.sortAlpha = true;
 	else
 		WIM_Data.sortAlpha = false;
@@ -447,11 +448,11 @@ function WIM_Options_InterceptSlashWispClicked()
 	end
 end
 
-function WIM_Options_BlockLowLevelClicked()
-	if(WIM_OptionsTabbedFrameGeneralBlockLowLevel:GetChecked()) then
-		WIM_Data.blockLowLevel = true;
+function WIM_Options_ReplyHotkeyFixClicked()
+	if(WIM_OptionsTabbedFrameGeneralReplyHotkeyFix:GetChecked()) then
+		WIM_Data.replyHotkeyFix = true;
 	else
-		WIM_Data.blockLowLevel = false;
+		WIM_Data.replyHotkeyFix = false;
 	end
 end
 

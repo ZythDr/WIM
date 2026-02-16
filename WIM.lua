@@ -28,6 +28,7 @@ WIM_CacheDimFactor = 0.6
 WIM_SessionWinSize = {}
 WIM_ResizeHandle = {}
 WIM_MergePendingUser = nil
+WIM_LastSelectedUser = nil
 
 -- GM Check on load: Check for "Teleport to GM Island" spell in spellbook
 local WIM_GMCheckFrame = CreateFrame("Frame")
@@ -147,7 +148,7 @@ WIM_Data_DEFAULTS = {
 	showTimeStamps = true,
 	showShortcutBar = true,
 	enableAlias = true,
-	enableFilter = true,
+	enableFilter = false,
 	aliasAsComment = true,
 	enableHistory = true,
 	historySettings = {
@@ -181,6 +182,7 @@ WIM_Data_DEFAULTS = {
 	useEscape = true,
 	escapeUnfocus = false,
 	hookWispParse = true,
+	replyHotkeyFix = true,
 	blockLowLevel = false,
 	requireAltForArrows = false,
 	mergeWindows = true,
@@ -704,6 +706,7 @@ function WIM_SelectUser(theUser)
 	if not theUser or not WIM_Windows[theUser] then
 		return
 	end
+	WIM_LastSelectedUser = theUser
 	if WIM_MergePendingUser and string.upper(WIM_MergePendingUser) == string.upper(theUser) then
 		WIM_MergePendingUser = nil
 	end
@@ -794,10 +797,11 @@ function WIM_Incoming(event)
 		if(WIM_Data.popOnSend == nil) then WIM_Data.popOnSend = WIM_Data_DEFAULTS.popOnSend; end;
 		if(WIM_Data.versionLastLoaded == nil) then WIM_Data.versionLastLoaded = WIM_Data_DEFAULTS.versionLastLoaded; end;
 		if(WIM_Data.showAFK == nil) then WIM_Data.showAFK = WIM_Data_DEFAULTS.showAFK; end;
-		if(WIM_Data.useEscape == nil) then WIM_Data.useEscape = WIM_Data_DEFAULTS.useEscape; end;
-		if(WIM_Data.escapeUnfocus == nil) then WIM_Data.escapeUnfocus = WIM_Data_DEFAULTS.escapeUnfocus; end;
-		if(WIM_Data.hookWispParse == nil) then WIM_Data.hookWispParse = WIM_Data_DEFAULTS.hookWispParse; end;
-		if(WIM_Data.requireAltForArrows == nil) then WIM_Data.requireAltForArrows = WIM_Data_DEFAULTS.requireAltForArrows; end;
+			if(WIM_Data.useEscape == nil) then WIM_Data.useEscape = WIM_Data_DEFAULTS.useEscape; end;
+			if(WIM_Data.escapeUnfocus == nil) then WIM_Data.escapeUnfocus = WIM_Data_DEFAULTS.escapeUnfocus; end;
+			if(WIM_Data.hookWispParse == nil) then WIM_Data.hookWispParse = WIM_Data_DEFAULTS.hookWispParse; end;
+			if(WIM_Data.replyHotkeyFix == nil) then WIM_Data.replyHotkeyFix = WIM_Data_DEFAULTS.replyHotkeyFix; end;
+			if(WIM_Data.requireAltForArrows == nil) then WIM_Data.requireAltForArrows = WIM_Data_DEFAULTS.requireAltForArrows; end;
 		if(WIM_Data.mergeWindows == nil) then WIM_Data.mergeWindows = WIM_Data_DEFAULTS.mergeWindows; end;
 		if(WIM_Data.clickOutsideUnfocus == nil) then WIM_Data.clickOutsideUnfocus = WIM_Data_DEFAULTS.clickOutsideUnfocus; end;
 		if(WIM_Data.tabBarBelow == nil) then WIM_Data.tabBarBelow = WIM_Data_DEFAULTS.tabBarBelow; end;
@@ -1761,6 +1765,9 @@ function WIM_CloseConvo(theUser)
 	WIM_Windows[theUser] = nil;
 	WIM_IconItems[theUser] = nil;
 	WIM_InputCache[theUser] = nil;
+	if WIM_LastSelectedUser and string.upper(WIM_LastSelectedUser) == string.upper(theUser) then
+		WIM_LastSelectedUser = WIM_FindMostRecentUser()
+	end
 
 	if wasActive then
 		WIM_TabBar_ActiveUser = nil
@@ -1973,6 +1980,36 @@ end
 
 function WIM_Bindings_EnableWIM()
 	WIM_SetWIM_Enabled(not WIM_Data.enableWIM);
+end
+
+function WIM_Bindings_ShowLastTab()
+	if not (WIM_Data and WIM_Data.enableWIM) then
+		return
+	end
+
+	local user = WIM_LastSelectedUser or WIM_TabBar_ActiveUser or WIM_FindMostRecentUser()
+	if not (user and WIM_Windows[user]) then
+		return
+	end
+
+	WIM_SelectUser(user)
+
+	local f = nil
+	if WIM_IsMergeEnabled() then
+		f = WIM_GetSharedFrame()
+	else
+		f = WIM_GetOrCreateWindow(user)
+	end
+	if not f then
+		return
+	end
+
+	f:Show()
+	f:Raise()
+	local edit = getglobal(f:GetName().."MsgBox")
+	if edit then
+		edit:SetFocus()
+	end
 end
 
 function WIM_SetWIM_Enabled(YesOrNo)

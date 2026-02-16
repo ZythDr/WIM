@@ -2,9 +2,10 @@
 	BINDING_NAME_WIMSHOWNEW = "Show New Messages";
 	BINDING_NAME_WIMHISTORY = "History Viewer";
 	BINDING_NAME_WIMENABLE = "Enable/Disable";
-	BINDING_NAME_WIMTOGGLE = "Toggle Messages";
-	BINDING_NAME_WIMSHOWALL = "Show All Messages";
-	BINDING_NAME_WIMHIDEALL = "Hide All Messages";
+		BINDING_NAME_WIMTOGGLE = "Toggle Messages";
+		BINDING_NAME_WIMSHOWALL = "Show All Messages";
+		BINDING_NAME_WIMHIDEALL = "Hide All Messages";
+		BINDING_NAME_WIMLASTTAB = "Open Last WIM Tab";
 
 	-- Class Names
 	WIM_LOCALIZED_DRUID = "Druid";
@@ -80,6 +81,8 @@ WIM_L_PFUI_LOOKUP="Use pfUI player cache fallback.";
 WIM_L_PFUI_LOOKUPTOOLTIP="When enabled, WIM uses pfUI player cache data (class/level/guild) if WIM has no cached entry yet. Requires pfUI + pfUI WIM Integration.";
 WIM_L_INTERCEPTWHISPCOM="Intercept whisper slash commands.";
 WIM_L_INTERCEPTWHISPCOMTOOLTIP="WIM will intercept any whisper slash commands and automatically open a new message window. (Example: /w or /whisper).";
+WIM_L_REPLYKEYFIX="Consume printable Reply keybinds.";
+WIM_L_REPLYKEYFIXTOOLTIP="When enabled, WIM consumes printable reply key presses (letters/symbols) to prevent accidental input from being inserted after opening reply.";
 WIM_L_CASCADINGDIR="Enable cascading. Direction:";
 WIM_L_SETLOC="Set Location";
 WIM_L_ALIASING="Enable Aliasing";

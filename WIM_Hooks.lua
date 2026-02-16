@@ -3,64 +3,11 @@ WIM_TradeSkillIsHooked = false;
 WIM_CraftSkillIsHooked = false;
 WIM_InspectIsHooked = false;
 
-local function WIM_GetReplyBindingKey()
-	if type(GetBindingKey) ~= "function" then
-		return nil
-	end
-
-	local candidates = {
-		"REPLY",
-		"REPLY_TELL",
-		"REPLY_WHISPER",
-		"REPLYWHISPER",
-		"REPLYLASTWHISPER",
-	}
-
-	for i = 1, table.getn(candidates) do
-		local key1 = GetBindingKey(candidates[i])
-		if key1 and key1 ~= "" then
-			return key1
-		end
-	end
-
-	return nil
-end
-
 local function WIM_ShouldApplyReplyHotkeyFix()
-	local key = WIM_GetReplyBindingKey()
-	if not key or key == "" then
-		return false
+	if WIM_Data and WIM_Data.replyHotkeyFix ~= nil then
+		return WIM_Data.replyHotkeyFix
 	end
-
-	local mainKey = string.gsub(key, "^.+-", "")
-	local printableNamedKeys = {
-		MINUS = true,
-		EQUALS = true,
-		BACKSLASH = true,
-		LEFTBRACKET = true,
-		RIGHTBRACKET = true,
-		SEMICOLON = true,
-		APOSTROPHE = true,
-		COMMA = true,
-		PERIOD = true,
-		SLASH = true,
-		GRAVE = true,
-		SPACE = true,
-		NUMPADDECIMAL = true,
-		NUMPADDIVIDE = true,
-		NUMPADMULTIPLY = true,
-		NUMPADMINUS = true,
-		NUMPADPLUS = true,
-	}
-	if string.len(mainKey) == 1 then
-		return true
-	end
-
-	if printableNamedKeys[mainKey] then
-		return true
-	end
-
-	return false
+	return true
 end
 
 
