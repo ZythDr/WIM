@@ -1,4 +1,10 @@
 WIM_CHANGE_LOG = [[
+|rVersion 1.5.1 (02-17-2026)|cffffffff
+[*] - Added safety fallback when tab module is missing or fails to load.
+[*] - Added one-time warning in chat only when tab module load fails.
+[*] - Auto-disables merged tab mode on load failure and falls back to split windows.
+[*] - Bumped addon version to 1.5.1.
+
 |rVersion 1.5.0 (02-08-2026)|cffffffff
 [+] - Added merged tabbed window mode with a shared conversation frame.
 [+] - Added a horizontal scrollable tab bar with unread flashing animation.

@@ -1,4 +1,4 @@
-WIM_VERSION = "1.3.2";
+WIM_VERSION = "1.5.1";
 
 WIM_Windows = {};
 WIM_EditBoxInFocus = nil;
@@ -29,6 +29,7 @@ WIM_SessionWinSize = {}
 WIM_ResizeHandle = {}
 WIM_MergePendingUser = nil
 WIM_LastSelectedUser = nil
+WIM_TabModuleWarningShown = false
 
 -- GM Check on load: Check for "Teleport to GM Island" spell in spellbook
 local WIM_GMCheckFrame = CreateFrame("Frame")
@@ -51,6 +52,16 @@ function WIM_DebugMsg(msg)
 	if WIM_Debug then
 		local timestamp = date("%H:%M:%S")
 		DEFAULT_CHAT_FRAME:AddMessage("|cff888888[" .. timestamp .. "]|r " .. msg)
+	end
+end
+
+function WIM_WarnTabModuleMissing()
+	if WIM_TabModuleWarningShown then
+		return
+	end
+	WIM_TabModuleWarningShown = true
+	if DEFAULT_CHAT_FRAME and DEFAULT_CHAT_FRAME.AddMessage then
+		DEFAULT_CHAT_FRAME:AddMessage("|cffff7f00[WIM]|r Tab module failed to load. Falling back to split windows mode.")
 	end
 end
 
@@ -240,6 +251,25 @@ end
 
 function WIM_IsMergeEnabled()
 	return WIM_Data and WIM_Data.mergeWindows;
+end
+
+-- Safety shim: if WIM_Tabs.lua is missing/not loaded, avoid hard nil-call errors.
+-- Real tab functions from WIM_Tabs.lua override these stubs when available.
+if type(WIM_TabBar_SetActiveUser) ~= "function" then
+	WIM_TabBar_ActiveUser = WIM_TabBar_ActiveUser or nil
+	function WIM_TabBar_IsEnabled()
+		return false
+	end
+	function WIM_TabBar_SetActiveUser(theUser)
+		WIM_TabBar_ActiveUser = theUser
+	end
+	function WIM_TabBar_Update()
+	end
+	function WIM_TabBar_AttachToWindow()
+	end
+	function WIM_TabBar_BuildList()
+		return {}
+	end
 end
 
 function WIM_ClearSessionSize()
@@ -809,6 +839,11 @@ function WIM_Incoming(event)
 		if(WIM_Data.wimPlayerDBLookup == nil) then WIM_Data.wimPlayerDBLookup = WIM_Data_DEFAULTS.wimPlayerDBLookup; end;
 		if(WIM_Data.pfuiPlayerDBLookup == nil) then WIM_Data.pfuiPlayerDBLookup = WIM_Data_DEFAULTS.pfuiPlayerDBLookup; end;
 		if(WIM_Data.pfuiFocusWindowClassBorder == nil) then WIM_Data.pfuiFocusWindowClassBorder = WIM_Data_DEFAULTS.pfuiFocusWindowClassBorder; end;
+		-- If tab module failed to load, force fallback to split-window mode.
+		if WIM_Data.mergeWindows and type(WIM_TabBar_Ensure) ~= "function" then
+			WIM_Data.mergeWindows = false;
+			WIM_WarnTabModuleMissing();
+		end
 
 		if(WIM_PlayerCacheDB == nil) then WIM_PlayerCacheDB = {}; end;
 		if WIM_Data.wimPlayerDBLookup ~= false then

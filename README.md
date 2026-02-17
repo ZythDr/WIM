@@ -1,6 +1,12 @@
-# WIM v1.5.0 - TurtleWoW
+# WIM v1.5.1 - TurtleWoW
 ## Patch Notes
 
+### v1.5.1
+- Added a safe fallback for cases where the tab module fails to load.
+- Added a one-time warning message when tab module load fails.
+- Automatically falls back to split-window mode instead of throwing nil-value errors.
+
+### v1.5.0
 ### Merged Windows/Tabbed Layout & QoL
 - **Merged tabbed window mode**
   - All conversations in one shared frame
